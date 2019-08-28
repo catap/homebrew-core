@@ -1,9 +1,9 @@
 class JohnJumbo < Formula
   desc "Enhanced version of john, a UNIX password cracker"
   homepage "https://www.openwall.com/john/"
-  url "https://openwall.com/john/j/john-1.8.0-jumbo-1.tar.xz"
-  version "1.8.0"
-  sha256 "bac93d025995a051f055adbd7ce2f1975676cac6c74a6c7a3ee4cfdd9c160923"
+  url "https://openwall.com/john/k/john-1.9.0-jumbo-1.tar.xz"
+  version "1.9.0"
+  sha256 "f5d123f82983c53d8cc598e174394b074be7a77756f5fb5ed8515918c81e7f3b"
 
   bottle do
     cellar :any
@@ -31,14 +31,6 @@ class JohnJumbo < Formula
   # https://github.com/magnumripper/JohnTheRipper/issues/982
   patch :DATA
 
-  # Previously john-jumbo ignored the value of $HOME; fixed
-  # upstream.  See
-  # https://github.com/magnumripper/JohnTheRipper/issues/1901
-  patch do
-    url "https://github.com/magnumripper/JohnTheRipper/commit/d29ad8aabaa9726eb08f440001c37611fa072e0c.diff?full_index=1"
-    sha256 "b3400f54c64dccce6fe4846872c945b280ec221c7a3d614b03c18029cba3695a"
-  end
-
   def install
     cd "src" do
       system "./configure", "--disable-native-tests", "--disable-native-macro"
@@ -46,8 +38,6 @@ class JohnJumbo < Formula
       system "make", "-s", "CC=#{ENV.cc}"
     end
 
-    # Remove the symlink and install the real file
-    rm "README"
     prefix.install "doc/README"
     doc.install Dir["doc/*"]
 
@@ -58,8 +48,6 @@ class JohnJumbo < Formula
     bash_completion.install share/"john/john.bash_completion" => "john.bash"
     zsh_completion.install share/"john/john.zsh_completion" => "_john"
 
-    # Source code defaults to "john.ini", so rename
-    mv share/"john/john.conf", share/"john/john.ini"
   end
 
   test do
@@ -74,7 +62,7 @@ end
 __END__
 --- a/src/params.h	2012-08-30 13:24:18.000000000 -0500
 +++ b/src/params.h	2012-08-30 13:25:13.000000000 -0500
-@@ -70,15 +70,15 @@
+@@ -101,15 +101,15 @@
   * notes above.
   */
  #ifndef JOHN_SYSTEMWIDE
